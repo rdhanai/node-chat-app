@@ -7,5 +7,5 @@ socket.on('disconnect', function() {
 });
 
 socket.on('newMessage', function(data) {
-    console.log('new message received from server..', data.text);
+    console.log('new message received from server..', data);
 });
