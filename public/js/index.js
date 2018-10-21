@@ -7,5 +7,26 @@ socket.on('disconnect', function() {
 });
 
 socket.on('newMessage', function(data) {
-    console.log('new message received from server..', data);
+    console.log('new message..', data);
+    var li = jQuery('<li></li>');
+    li.text(`${data.from}: ${data.text}`);
+    var messages = jQuery('#messages');
+    messages.append(li);
+});
+
+// socket.emit('createMessage', {
+//     from: 'Frank',
+//     text: 'Hi from Frank'
+// }, function(){
+//     console.log('got it');
+// });
+
+jQuery('#message-form').on('submit', function(e){
+        e.preventDefault();
+        socket.emit('createMessage', {
+             from: 'User',
+             text: jQuery('#message').val()   
+        }, function (){
+
+        });
 });
