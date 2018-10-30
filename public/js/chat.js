@@ -1,5 +1,6 @@
 var socket = io();
 
+
 function scrollToBottm(){
     var messages = jQuery('#messages');
     var newMessage = messages.children('li:last-child');
@@ -15,11 +16,32 @@ function scrollToBottm(){
 }   
 socket.on('connect', function(){
     console.log('connected to server');
+    var params =  jQuery.deparam(window.location.search);
+    socket.emit('join', params, function (errors){
+        if (errors){
+            alert(errors);
+            window.location.href = '/';
+        } else {
+            console.log('no erros');
+        }
+
+    })
 });
 socket.on('disconnect', function() {
     console.log('disconnected from server');
 });
 
+socket.on('updateUserList', function(users){
+    console.log('users list', users);
+    var ol = jQuery("<ol></ol>");
+
+    users.forEach(function (user){
+        ol.append(jQuery('<li></li>').text(user));
+    });
+
+    jQuery("#users").html(ol);
+
+});
 socket.on('newMessage', function(data) {
     var formattedTime = moment(data.createdAt).format('h:mm a');
     var template =  jQuery('#message-template').html();
@@ -69,6 +91,7 @@ jQuery('#message-form').on('submit', function(e){
             return;
         }
         socket.emit('createMessage', {
+             id: socket.id,
              from: 'User',
              text: messageTextBox.val()   
         }, function (){
