@@ -193,3 +193,7 @@
       margin-right: 0px;
     }
   }
+
+  li.highlight {
+    background-color: yellow;
+  }
